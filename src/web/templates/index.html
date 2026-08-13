@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+
+{% block title %}Lost Gifts — история Telegram NFT подарков{% endblock %}
+
+{% block extra_css %}
+.hero {
+  padding: 48px 32px;
+  text-align: center;
+}
+.hero h1 {
+  font-size: clamp(2rem, 5vw, 3.2rem);
+  letter-spacing: -0.03em;
+  margin-bottom: 12px;
+}
+.hero p {
+  color: var(--muted);
+  max-width: 640px;
+  margin: 0 auto 28px;
+  font-size: 1.05rem;
+}
+.search-box {
+  display: flex;
+  gap: 10px;
+  max-width: 720px;
+  margin: 0 auto;
+  flex-wrap: wrap;
+}
+.search-box input {
+  flex: 1 1 320px;
+  min-width: 0;
+  padding: 14px 16px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: rgba(0,0,0,0.25);
+  color: var(--text);
+  font-size: 1rem;
+}
+.search-box input:focus {
+  outline: none;
+  border-color: rgba(59,130,246,0.6);
+  box-shadow: 0 0 0 4px rgba(59,130,246,0.12);
+}
+.features {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  margin-top: 28px;
+}
+.feature {
+  padding: 20px;
+}
+.feature h3 {
+  font-size: 1rem;
+  margin-bottom: 8px;
+}
+.feature p {
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+.error {
+  margin-top: 14px;
+  color: #fca5a5;
+  font-size: 0.92rem;
+}
+.examples {
+  margin-top: 18px;
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+.examples code {
+  background: rgba(255,255,255,0.06);
+  padding: 2px 8px;
+  border-radius: 8px;
+}
+{% endblock %}
+
+{% block content %}
+<section class="card hero">
+  <h1>История Telegram NFT подарков</h1>
+  <p>Отслеживай передачи collectible gifts, смотри метаданные Fragment и анимацию Lottie — как в экосистеме TON.</p>
+
+  <form class="search-box" action="/search" method="get">
+    <input
+      type="text"
+      name="link"
+      placeholder="https://t.me/nft/PlushPepe-1 или PlushPepe-1"
+      value="{{ link or '' }}"
+      required
+      autofocus
+    >
+    <button class="btn btn-primary" type="submit">Открыть историю</button>
+  </form>
+
+  {% if error %}
+  <div class="error">{{ error }}</div>
+  {% endif %}
+
+  <div class="examples">
+    Пример: <code>https://t.me/nft/PlushPepe-1</code>
+  </div>
+</section>
+
+<section class="features">
+  <div class="card feature">
+    <h3>Цепочка передач</h3>
+    <p>Фиксируем смену владельца с момента начала парсинга.</p>
+  </div>
+  <div class="card feature">
+    <h3>Fragment metadata</h3>
+    <p>JSON, WebP и Lottie-анимация с <code>nft.fragment.com</code>.</p>
+  </div>
+  <div class="card feature">
+    <h3>Telegram Bot</h3>
+    <p>Команды <code>/hist</code> и <code>/web</code> для быстрого доступа.</p>
+  </div>
+</section>
+{% endblock %}

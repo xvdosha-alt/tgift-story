@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "lostgifts"
+version = "0.1.0"
+description = "Telegram NFT gift transfer tracker with web, bot and Redis logger"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [{ name = "xv_" }]
+
+[project.urls]
+Homepage = "https://lostgifts.ru"
+Repository = "https://github.com/xvdosha-alt/tgift-story"
+Issues = "https://github.com/xvdosha-alt/tgift-story/issues"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["src*"]

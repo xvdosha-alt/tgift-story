@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Panel</title>
+  <style>
+    :root {
+      --bg: #070b14;
+      --surface: rgba(255,255,255,0.04);
+      --border: rgba(255,255,255,0.08);
+      --text: #eef2ff;
+      --muted: #94a3b8;
+      --accent: #6366f1;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: Inter, system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 24px;
+    }
+    .top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+    }
+    h1 { font-size: 1.4rem; }
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+    .stat {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 18px;
+    }
+    .stat .label { color: var(--muted); font-size: 0.85rem; }
+    .stat .value { font-size: 1.8rem; font-weight: 700; margin-top: 6px; }
+    .grid {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 18px;
+    }
+    @media (max-width: 960px) { .grid { grid-template-columns: 1fr; } }
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+    }
+    .card-head {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border);
+      font-weight: 600;
+    }
+    table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+    th, td {
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--border);
+      text-align: left;
+      vertical-align: top;
+    }
+    th { color: var(--muted); font-weight: 500; }
+    .mono { font-family: ui-monospace, monospace; font-size: 0.82rem; }
+    .muted { color: var(--muted); }
+    .chain { padding: 12px 14px; border-bottom: 1px solid var(--border); }
+    .chain-ip { font-weight: 600; margin-bottom: 8px; }
+    .chain-item {
+      display: grid;
+      grid-template-columns: 140px 80px 1fr;
+      gap: 8px;
+      padding: 4px 0;
+      font-size: 0.82rem;
+    }
+    .logout {
+      color: var(--muted);
+      text-decoration: none;
+      border: 1px solid var(--border);
+      padding: 8px 12px;
+      border-radius: 999px;
+    }
+    .tag {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: rgba(99,102,241,0.15);
+      color: #c7d2fe;
+      font-size: 0.75rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="top">
+    <h1>Activity</h1>
+    <a class="logout" href="/logout">exit</a>
+  </div>
+
+  <div class="stats">
+    <div class="stat">
+      <div class="label">Unique visitors (IP)</div>
+      <div class="value">{{ stats.unique_ips }}</div>
+    </div>
+    <div class="stat">
+      <div class="label">Total events</div>
+      <div class="value">{{ stats.total_events }}</div>
+    </div>
+  </div>
+
+  <div class="grid">
+    <section class="card">
+      <div class="card-head">Recent events</div>
+      <table>
+        <thead>
+          <tr>
+            <th>When</th>
+            <th>IP</th>
+            <th>Type</th>
+            <th>Input</th>
+            <th>Slug</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for ev in events %}
+          <tr>
+            <td class="mono">{{ format_datetime(ev.at) }}</td>
+            <td class="mono">{{ ev.ip }}</td>
+            <td><span class="tag">{{ ev.event }}</span></td>
+            <td>{{ ev.input or '—' }}</td>
+            <td class="mono">{{ ev.slug or '—' }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </section>
+
+    <section class="card">
+      <div class="card-head">Chains by IP</div>
+      {% for ip, items in chains.items() %}
+      <div class="chain">
+        <div class="chain-ip mono">{{ ip }} <span class="muted">({{ items|length }})</span></div>
+        {% for ev in items %}
+        <div class="chain-item">
+          <span class="mono muted">{{ format_datetime(ev.at) }}</span>
+          <span class="tag">{{ ev.event }}</span>
+          <span>{{ ev.input or ev.slug or '—' }}</span>
+        </div>
+        {% endfor %}
+      </div>
+      {% else %}
+      <div class="chain muted">No chains yet</div>
+      {% endfor %}
+    </section>
+  </div>
+</body>
+</html>

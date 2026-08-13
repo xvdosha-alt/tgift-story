@@ -1,0 +1,264 @@
+{% extends "base.html" %}
+
+{% block title %}{{ snapshot.name }} #{{ snapshot.number }} — Lost Gifts{% endblock %}
+
+{% block extra_css %}
+.gift-layout {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 20px;
+}
+@media (max-width: 860px) {
+  .gift-layout { grid-template-columns: 1fr; }
+}
+.panel { padding: 24px; }
+.preview-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+.lottie-box {
+  width: min(100%, 320px);
+  aspect-ratio: 1;
+  border-radius: 20px;
+  background: radial-gradient(circle at 50% 30%, rgba(59,130,246,0.15), rgba(0,0,0,0.2));
+  border: 1px solid var(--border);
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+}
+.lottie-box img.fallback {
+  width: 72%;
+  height: auto;
+}
+.gift-title {
+  font-size: 1.6rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+.gift-slug {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+.meta-grid {
+  display: grid;
+  gap: 10px;
+  margin-top: 18px;
+}
+.meta-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.95rem;
+}
+.meta-row span:first-child { color: var(--muted); }
+.links-grid {
+  display: grid;
+  gap: 10px;
+  margin-top: 16px;
+}
+.link-chip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: rgba(0,0,0,0.22);
+  border: 1px solid var(--border);
+  text-decoration: none;
+  color: var(--text);
+  transition: border-color .15s ease, background .15s ease;
+}
+.link-chip:hover {
+  border-color: rgba(59,130,246,0.45);
+  background: rgba(59,130,246,0.08);
+}
+.link-chip small { color: var(--muted); display: block; margin-top: 2px; }
+.notice {
+  margin-top: 16px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: rgba(59,130,246,0.08);
+  border: 1px solid rgba(59,130,246,0.18);
+  color: #cbd5e1;
+  font-size: 0.9rem;
+}
+.notice .live { color: #93c5fd; margin-top: 6px; }
+.history-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+.history-head h2 { font-size: 1.1rem; }
+.timeline { display: grid; gap: 12px; }
+.timeline-item {
+  display: flex;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+}
+.avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid var(--border);
+  background: var(--surface);
+}
+.avatar-placeholder {
+  display: grid;
+  place-items: center;
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+.timeline-time { color: var(--muted); font-size: 0.82rem; }
+.timeline-text { font-weight: 500; margin-top: 2px; }
+.empty {
+  color: var(--muted);
+  font-size: 0.92rem;
+  line-height: 1.6;
+}
+.back-row { margin-bottom: 16px; }
+{% endblock %}
+
+{% block content %}
+<div class="back-row">
+  <a class="btn btn-ghost" href="/">← На главную</a>
+</div>
+
+<div class="gift-layout">
+  <section class="card panel">
+    <div class="preview-wrap">
+      <div class="lottie-box" id="gift-lottie">
+        {% set webp_url = fragment.fragment_webp | safe_url %}
+        {% set og_url = snapshot.og_image | safe_url %}
+        {% if webp_url %}
+        <img class="fallback" src="{{ webp_url }}" alt="{{ snapshot.name }}">
+        {% elif og_url %}
+        <img class="fallback" src="{{ og_url }}" alt="{{ snapshot.name }}">
+        {% endif %}
+      </div>
+      <div style="text-align:center">
+        <div class="gift-title">{{ snapshot.name }} #{{ snapshot.number }}</div>
+        <div class="gift-slug">{{ slug }}</div>
+      </div>
+    </div>
+
+    <div class="meta-grid">
+      <div class="meta-row"><span>Owner</span><span>{{ snapshot.owner or '—' }}</span></div>
+      <div class="meta-row"><span>Model</span><span>{{ snapshot.model or '—' }}</span></div>
+      <div class="meta-row"><span>Backdrop</span><span>{{ snapshot.backdrop or '—' }}</span></div>
+      <div class="meta-row"><span>Symbol</span><span>{{ snapshot.symbol or '—' }}</span></div>
+      <div class="meta-row"><span>Quantity</span><span>{{ snapshot.quantity or '—' }}</span></div>
+    </div>
+
+    {% if fragment.description %}
+    <p class="muted" style="margin-top:16px;font-size:0.92rem;">{{ fragment.description }}</p>
+    {% endif %}
+
+    <div class="links-grid">
+      {% set tg_url = fragment.telegram_url | safe_url %}
+      {% if tg_url %}
+      <a class="link-chip" href="{{ tg_url }}" target="_blank" rel="noopener noreferrer">
+        <div><strong>Telegram NFT</strong><small>{{ tg_url }}</small></div>
+        <span>↗</span>
+      </a>
+      {% endif %}
+      {% set json_url = fragment.fragment_json | safe_url %}
+      {% if json_url %}
+      <a class="link-chip" href="{{ json_url }}" target="_blank" rel="noopener noreferrer">
+        <div><strong>Fragment JSON</strong><small>metadata · attributes · lottie</small></div>
+        <span>↗</span>
+      </a>
+      {% endif %}
+      {% if webp_url %}
+      <a class="link-chip" href="{{ webp_url }}" target="_blank" rel="noopener noreferrer">
+        <div><strong>Fragment WebP</strong><small>preview image</small></div>
+        <span>↗</span>
+      </a>
+      {% endif %}
+      {% set lottie_link = fragment.lottie_url | safe_url %}
+      {% if lottie_link %}
+      <a class="link-chip" href="{{ lottie_link }}" target="_blank" rel="noopener noreferrer">
+        <div><strong>Lottie JSON</strong><small>анимация для web / TGS pipeline</small></div>
+        <span>↗</span>
+      </a>
+      {% endif %}
+    </div>
+  </section>
+
+  <section class="card panel">
+    <div class="history-head">
+      <h2>Цепочка передач</h2>
+    </div>
+
+    <div class="notice">
+      {{ parse_notice }}
+      {% if fetched_live %}
+      <div class="live">Данные получены вне очереди (первый запрос)</div>
+      {% endif %}
+    </div>
+
+    {% if history %}
+    <div class="timeline" style="margin-top:16px">
+      {% for event in history %}
+      <div class="timeline-item">
+        {% if event.owner_photo %}
+        {% set avatar_url = event.owner_photo | safe_url %}
+        {% if avatar_url %}
+        <img class="avatar" src="{{ avatar_url }}" alt="">
+        {% else %}
+        <div class="avatar avatar-placeholder">?</div>
+        {% endif %}
+        {% else %}
+        <div class="avatar avatar-placeholder">?</div>
+        {% endif %}
+        <div>
+          <div class="timeline-time">{{ event.recorded_at[:19].replace('T', ' ') }}</div>
+          {% if event.event_type == 'owner_transfer' %}
+          <div class="timeline-text">{{ event.from_owner or '?' }} → {{ event.to_owner or '?' }}</div>
+          {% elif event.event_type == 'discovered' %}
+          <div class="timeline-text">Обнаружен → {{ event.to_owner or '?' }}</div>
+          {% endif %}
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty" style="margin-top:16px">
+      Передач пока не зафиксировано.<br>
+      Парсинг с {{ parse_started_label }} — более ранние передачи недоступны.<br>
+      Текущий владелец: <strong>{{ snapshot.owner or '—' }}</strong>
+    </div>
+    {% endif %}
+
+    {% if snapshot %}
+    <div class="muted" style="margin-top:18px">Сейчас: <strong style="color:var(--text)">{{ snapshot.owner or '—' }}</strong></div>
+    {% endif %}
+  </section>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+  (function () {
+    const container = document.getElementById('gift-lottie');
+    const lottieUrl = {{ (fragment.lottie_url | safe_url) | tojson }};
+    if (!container || !lottieUrl || !window.lottie) return;
+    container.innerHTML = '';
+    lottie.loadAnimation({
+      container,
+      renderer: 'svg',
+      loop: true,
+      autoplay: true,
+      path: lottieUrl,
+    });
+  })();
+</script>
+{% endblock %}
