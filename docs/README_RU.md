@@ -21,7 +21,7 @@
 ## 🚀 Быстрый старт
 
 ```bash
-git clone https://github.com/xvdosha-alt/tgift-story.git
+git clone https://github.com/xvDoshik/tgift-story.git
 cd tgift-story
 
 python -m venv .venv

@@ -21,7 +21,7 @@ Paste a gift link - get owner changes, metadata from Fragment, and a simple web 
 ## 🚀 Quick start
 
 ```bash
-git clone https://github.com/xvdosha-alt/tgift-story.git
+git clone https://github.com/xvDoshik/tgift-story.git
 cd tgift-story
 
 python -m venv .venv

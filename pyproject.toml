@@ -13,8 +13,8 @@ authors = [{ name = "xv_" }]
 
 [project.urls]
 Homepage = "https://lostgifts.ru"
-Repository = "https://github.com/xvdosha-alt/tgift-story"
-Issues = "https://github.com/xvdosha-alt/tgift-story/issues"
+Repository = "https://github.com/xvDoshik/tgift-story"
+Issues = "https://github.com/xvDoshik/tgift-story/issues"
 
 [tool.setuptools.packages.find]
 where = ["."]
