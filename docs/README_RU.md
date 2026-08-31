@@ -1,24 +1,24 @@
-EN | [RU](docs/README_RU.md)
+[EN](../README.md) | RU
 
 ## Lost Gifts 🎁
 
 ![Python](https://img.shields.io/badge/Python-3776AB?style=flat-square&logo=python&logoColor=white)
 
-Bot and web service for tracking Telegram NFT gift transfer history.
+Бот и веб-сервис для отслеживания истории передач Telegram NFT-подарков.
 
-Paste a gift link - get owner changes, metadata from Fragment, and a simple web page with preview.
+Вставь ссылку на подарок - получи смены владельца, метаданные с Fragment и простую веб-страницу с превью.
 
-**Site:** [lostgifts.ru](https://lostgifts.ru)
+**Сайт:** [lostgifts.ru](https://lostgifts.ru)
 
-## ✨ Features
+## ✨ Возможности
 
-- Tracks collectible gifts from `t.me/nft/{Slug}-{id}`
-- Logs owner transfers in Redis from the moment tracking starts
-- Telegram bot: `/hist` for history, `/web` for the page link
-- Background workers poll known gifts and append new transfers
-- Web search + gift pages with Fragment JSON / WebP / Lottie
+- Отслеживает collectible gifts по `t.me/nft/{Slug}-{id}`
+- Логирует смены владельца в Redis с момента начала трекинга
+- Telegram-бот: `/hist` для истории, `/web` для ссылки на страницу
+- Фоновые воркеры опрашивают известные подарки и дописывают новые передачи
+- Веб-поиск + страницы подарков с Fragment JSON / WebP / Lottie
 
-## 🚀 Quick start
+## 🚀 Быстрый старт
 
 ```bash
 git clone https://github.com/xvdosha-alt/tgift-story.git
@@ -40,7 +40,7 @@ cp .env.example .env
 docker run -d --name lostgifts-redis -p 127.0.0.1:6379:6379 redis:7-alpine
 ```
 
-### Run
+### Запуск
 
 ```bash
 python -m src.logger.worker &
@@ -48,9 +48,9 @@ uvicorn src.web.server:app --host 127.0.0.1 --port 8877 &
 python -m src.bot.main
 ```
 
-## 🎮 Usage
+## 🎮 Использование
 
-### Bot
+### Бот
 
 ```
 /hist https://t.me/nft/PlushPepe-1
@@ -61,8 +61,8 @@ python -m src.bot.main
 
 | Route | Description |
 |-------|-------------|
-| `/` | Search by link |
-| `/gift/PlushPepe-1` | History + Fragment preview |
+| `/` | Поиск по ссылке |
+| `/gift/PlushPepe-1` | История + Fragment preview |
 
 ### CLI
 
@@ -71,7 +71,7 @@ python -m src.cli.main hist https://t.me/nft/PlushPepe-1
 python -m src.cli.main track PlushPepe-1 SignetRing-903
 ```
 
-## How it works
+## Как это работает
 
 ```
 Bot / Web / CLI ──► Redis ◄── Logger workers
@@ -86,7 +86,7 @@ Bot / Web / CLI ──► Redis ◄── Logger workers
 | `gift:{slug}:tracked_since` | When tracking started |
 | `gifts:all` | Slugs in rotation |
 
-History is built from observed owner changes after tracking starts - not a full pre-existing chain.
+История строится из наблюдаемых смен владельца после начала трекинга - не полная pre-existing цепочка.
 
 ## Deploy
 
